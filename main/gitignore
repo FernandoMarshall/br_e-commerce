@@ -1,0 +1,22 @@
+# local
+torch/
+venv/
+local/
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# MacOS
+*.DS_Store
+
+# Data
+data/
+*.csv
+*.zip
+
+# Python
+__pycache__/
