@@ -1,0 +1,5 @@
+model,PR_AUC_test,PR_AUC_val,ROC_AUC_test,ROC_AUC_val,Brier_test,Brier_val
+B1 airline x hour rate,0.232,0.168,0.609,0.616,0.141,0.111
+B2 logistic (A features),0.24,0.188,0.619,0.639,0.141,0.111
+A LightGBM (schedule time),0.241,0.176,0.62,0.631,0.14,0.11
+"B LightGBM (day of, -2h)",0.564,0.47,0.783,0.764,0.108,0.085
