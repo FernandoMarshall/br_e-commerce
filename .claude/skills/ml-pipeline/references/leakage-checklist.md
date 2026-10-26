@@ -15,6 +15,8 @@ Run through this list before reporting any model result.
 
 ## Time
 - [ ] Train/val/test split by time when the problem is about the future.
+- [ ] Drift checked before training: target rate and the share of new categories per period. If they move, walk-forward folds are used, with every fitted component (encodings, scalers, early stopping) refit inside each fold. Results are reported as mean ± spread across periods.
+- [ ] Expanding vs. sliding training windows compared, and a retraining cadence/window proposed.
 - [ ] No feature uses values the model can't have seen in training (e.g. month, when test months are unseen).
 - [ ] Timezones: compare timestamps in one zone. Local times from different places are converted or never compared.
 - [ ] Rolling windows are half-open and end at the prediction time: `(t − w, t]`. Events exactly at or after t are excluded.

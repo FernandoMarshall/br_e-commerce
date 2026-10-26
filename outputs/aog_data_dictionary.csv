@@ -1,0 +1,38 @@
+variable,definition,source,available_at,null_handling
+tgt_fail_30,1 if an unscheduled event happens in cycles t+1..t+30; NaN if censored,maintenance_events,future (target),"NaN = censored, rows excluded"
+tgt_cycles_to_failure,next failure cycle - t,maintenance_events,future (analysis only),NaN if no later failure
+sen_temp_z,(temperature_celsius - life baseline mean) / life baseline std,sensor_readings.temperature_celsius,end of cycle t,ffill within life; baseline rows excluded
+sen_temp_pct,temperature_celsius / life baseline mean - 1,sensor_readings.temperature_celsius,end of cycle t,same as above
+sen_temp_z_mean5,Mean of sen_temp_z over cycles t-4..t,sensor_readings.temperature_celsius,end of cycle t,NaN until the window is full
+sen_temp_z_std5,Std of sen_temp_z over cycles t-4..t,sensor_readings.temperature_celsius,end of cycle t,NaN until the window is full
+sen_temp_z_slope5,OLS slope (per cycle) of sen_temp_z over cycles t-4..t,sensor_readings.temperature_celsius,end of cycle t,NaN until the window is full
+sen_temp_z_mean10,Mean of sen_temp_z over cycles t-9..t,sensor_readings.temperature_celsius,end of cycle t,NaN until the window is full
+sen_temp_z_std10,Std of sen_temp_z over cycles t-9..t,sensor_readings.temperature_celsius,end of cycle t,NaN until the window is full
+sen_temp_z_slope10,OLS slope (per cycle) of sen_temp_z over cycles t-9..t,sensor_readings.temperature_celsius,end of cycle t,NaN until the window is full
+sen_vibr_z,(vibration_mm_s - life baseline mean) / life baseline std,sensor_readings.vibration_mm_s,end of cycle t,ffill within life; baseline rows excluded
+sen_vibr_pct,vibration_mm_s / life baseline mean - 1,sensor_readings.vibration_mm_s,end of cycle t,same as above
+sen_vibr_z_mean5,Mean of sen_vibr_z over cycles t-4..t,sensor_readings.vibration_mm_s,end of cycle t,NaN until the window is full
+sen_vibr_z_std5,Std of sen_vibr_z over cycles t-4..t,sensor_readings.vibration_mm_s,end of cycle t,NaN until the window is full
+sen_vibr_z_slope5,OLS slope (per cycle) of sen_vibr_z over cycles t-4..t,sensor_readings.vibration_mm_s,end of cycle t,NaN until the window is full
+sen_vibr_z_mean10,Mean of sen_vibr_z over cycles t-9..t,sensor_readings.vibration_mm_s,end of cycle t,NaN until the window is full
+sen_vibr_z_std10,Std of sen_vibr_z over cycles t-9..t,sensor_readings.vibration_mm_s,end of cycle t,NaN until the window is full
+sen_vibr_z_slope10,OLS slope (per cycle) of sen_vibr_z over cycles t-9..t,sensor_readings.vibration_mm_s,end of cycle t,NaN until the window is full
+sen_pres_z,(pressure_psi - life baseline mean) / life baseline std,sensor_readings.pressure_psi,end of cycle t,ffill within life; baseline rows excluded
+sen_pres_pct,pressure_psi / life baseline mean - 1,sensor_readings.pressure_psi,end of cycle t,same as above
+sen_pres_z_mean5,Mean of sen_pres_z over cycles t-4..t,sensor_readings.pressure_psi,end of cycle t,NaN until the window is full
+sen_pres_z_std5,Std of sen_pres_z over cycles t-4..t,sensor_readings.pressure_psi,end of cycle t,NaN until the window is full
+sen_pres_z_slope5,OLS slope (per cycle) of sen_pres_z over cycles t-4..t,sensor_readings.pressure_psi,end of cycle t,NaN until the window is full
+sen_pres_z_mean10,Mean of sen_pres_z over cycles t-9..t,sensor_readings.pressure_psi,end of cycle t,NaN until the window is full
+sen_pres_z_std10,Std of sen_pres_z over cycles t-9..t,sensor_readings.pressure_psi,end of cycle t,NaN until the window is full
+sen_pres_z_slope10,OLS slope (per cycle) of sen_pres_z over cycles t-9..t,sensor_readings.pressure_psi,end of cycle t,NaN until the window is full
+sen_health_max_z,max |z| across the 3 sensors,sensor_readings,end of cycle t,-
+sen_health_mean5,mean of sen_health_max_z over the last 5 cycles,sensor_readings,end of cycle t,-
+sen_n_missing,number of sensors missing (or glitch) at t before forward fill,sensor_readings,end of cycle t,-
+mnt_n_sched_before,scheduled events in cycles < t,maintenance_events,before cycle t,0 if none
+mnt_cyc_since_sched,t - last scheduled event cycle,maintenance_events,before cycle t,NaN if none (imputed + indicator in LR)
+cmp_type,component type (one-hot in the model),components.component_type,static,-
+ac_aircraft_model,aircraft attribute,fleet_info.aircraft_model,static,-
+ac_manufacture_year,aircraft attribute,fleet_info.manufacture_year,static,-
+ac_base_airport,aircraft attribute,fleet_info.base_airport,static,-
+total_flight_hours,EXCLUDED: end-of-data snapshot,fleet_info.total_flight_hours,after prediction time,not used
+cyc_in_life,EXCLUDED: readings since install/replacement,sensor_readings.flight_cycle,end of cycle t,confounded by censoring

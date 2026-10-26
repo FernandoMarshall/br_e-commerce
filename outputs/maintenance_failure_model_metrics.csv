@@ -1,0 +1,4 @@
+model,n_features,test_auc_pr,test_roc_auc
+random baseline,0,0.1244,0.5
+logistic regression (forward selection),9,0.3423,0.8085
+LightGBM (all features),32,0.3337,0.8168

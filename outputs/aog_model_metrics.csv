@@ -1,0 +1,7 @@
+model,feature_set,n_features,oof_auc_pr,oof_roc_auc,fold_auc_pr_mean,fold_auc_pr_std
+random baseline,-,0,0.1023,0.5,,
+heuristic: sen_health_mean5,-,1,0.7304,0.8738,0.7402,0.0555
+logistic regression,sensors,27,0.7602,0.8863,0.7775,0.0298
+LightGBM,sensors,27,0.7747,0.873,0.7751,0.0153
+logistic regression,sensors + context,41,0.7273,0.892,0.7449,0.034
+LightGBM,sensors + context,41,0.7905,0.9091,0.7912,0.0128

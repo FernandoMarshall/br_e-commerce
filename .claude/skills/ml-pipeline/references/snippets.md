@@ -43,6 +43,39 @@ pd.merge_asof(left.sort_values("t"), right.sort_values("event_t"),
               direction="backward", tolerance=pd.Timedelta("12h"))
 ```
 
+## Drift check before choosing the validation scheme
+```python
+per = df.groupby("period").agg(rows=(target, "size"), target_rate=(target, "mean"))
+seen = set()
+new_share = {}
+for p, g in df.groupby("period"):
+    cats = set(g["category_col"])
+    new_share[p] = len(cats - seen) / len(cats)
+    seen |= cats
+per["new_category_share"] = pd.Series(new_share)
+per  # big swings in target_rate or new_category_share -> use walk-forward folds
+```
+
+## Walk-forward (rolling-origin) folds
+```python
+def walk_forward_folds(periods, min_train=3, window=None, holdout=1):
+    """Yield (train_periods, test_period). window=None -> expanding; int -> sliding (last N).
+    The last `holdout` periods are left out for a final, untouched evaluation."""
+    periods = sorted(periods)[:len(periods) - holdout]
+    for i in range(min_train, len(periods)):
+        start = 0 if window is None else max(0, i - window)
+        yield periods[start:i], periods[i]
+
+rows = []
+for scheme, window in [("expanding", None), ("sliding_3", 3)]:
+    for train_p, test_p in walk_forward_folds(df["period"].unique(), window=window):
+        tr, te = df[df["period"].isin(train_p)], df[df["period"] == test_p]
+        # refit encodings / scalers / model on `tr` only, then score `te`
+        rows.append({"scheme": scheme, "test_period": test_p, "metric": ...})
+scores = pd.DataFrame(rows)
+scores.groupby("scheme")["metric"].agg(["mean", "std"])
+```
+
 ## Brute-force check of a vectorized feature
 ```python
 rng = np.random.default_rng(42)

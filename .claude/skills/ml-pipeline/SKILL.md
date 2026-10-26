@@ -75,6 +75,23 @@ End with a recommendation for what to predict first, and why. Before calling a t
 - Full checklist: `references/leakage-checklist.md`.
 
 ## Stage 6: Baselines and first model (only after the target is chosen)
+
+### Before training: choose the validation scheme
+A single fixed time split gives one score from one period. If the target rate or the features drift over time (seasonality, ops changes, new categories), that score may be luck: a favorable or unfavorable period. And a model trained once and used for months goes stale. Before training, check for drift:
+- the target rate per period (month or week)
+- the share of categories that are new per period
+- train vs val vs test base rates
+
+If any of them move noticeably, use **walk-forward (rolling-origin) validation**:
+- Use K folds, each training on data up to period *t* and testing on period *t+1*. Report the mean ± spread of the main metric across folds, plus a per-period chart, not just one number.
+- Compare an **expanding** window (all history) with a **sliding** window (the last N periods). The winner tells you how much history to retrain on in production.
+- **Recompute everything fitted on training data inside each fold:** historical/target-encoded aggregates, scalers, imputers, early stopping. Otherwise the folds leak into each other. Features that don't depend on the split (e.g. as-of features built from strictly past events) can be computed once.
+- Use the result to propose a **retraining plan**: how often to retrain, on how long a window, and whether to recalibrate probabilities on the most recent period.
+- Keep a final held-out period that no fold or tuning step touched, for the headline number.
+
+A single split is fine when the data covers a short, stable period. If you use one, state that it's a single split, and note any base-rate difference between the splits next to the results. See `references/snippets.md` for a fold generator.
+
+### Baselines and model
 - Always fit at least two baselines before the real model:
   - a historical-rate lookup table, e.g. the target rate per category × hour
   - a linear or logistic model
