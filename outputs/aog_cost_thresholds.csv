@@ -1,0 +1,6 @@
+model,feature_set,threshold,missed_failures,unnecessary_inspections,inspections_per_1000_cycles,cost
+heuristic: sen_health_mean5,-,6.188,0,0,0.0,0.0
+logistic regression,sensors,1.0,0,0,0.0,0.0
+LightGBM,sensors,0.986,0,0,0.0,0.0
+logistic regression,sensors + context,0.997,0,0,0.0,0.0
+LightGBM,sensors + context,0.913,0,1,0.345,1.0
